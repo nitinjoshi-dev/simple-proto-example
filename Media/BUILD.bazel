@@ -1,0 +1,20 @@
+load("@rules_java//java:defs.bzl", "java_proto_library")
+load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "media_service_proto",
+    srcs = ["media_service.proto"]
+)
+
+java_proto_library(
+    name = "media_service_java_proto",
+    deps = [":media_service_proto"],
+)
+
+java_grpc_library(
+    name = "mediia_service_java_grpc",
+    srcs = [":media_service_proto"],
+    deps = [":media_service_java_proto"],
+)

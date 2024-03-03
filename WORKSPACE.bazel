@@ -1,0 +1,48 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "io_grpc_grpc_java",
+    sha256 = "30cfc954c2174493822601a74b876837986c444d9b9e917082994b5e34348f34",
+    urls = ["https://github.com/grpc/grpc-java/archive/v1.62.2.tar.gz"],
+    strip_prefix = "grpc-java-1.62.2",
+)
+
+http_archive(
+    name = "rules_jvm_external",
+    sha256 = "d31e369b854322ca5098ea12c69d7175ded971435e55c18dd9dd5f29cc5249ac",
+    strip_prefix = "rules_jvm_external-5.3",
+    url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/5.3/rules_jvm_external-5.3.tar.gz",
+)
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@io_grpc_grpc_java//:repositories.bzl", "IO_GRPC_GRPC_JAVA_ARTIFACTS")
+load("@io_grpc_grpc_java//:repositories.bzl", "IO_GRPC_GRPC_JAVA_OVERRIDE_TARGETS")
+# GRPC Java repositories will `bind` (create alias) for google libs
+# Google libs are gson, guava, error prone
+# Also tries to bringing com_google_protobuf, com_google_protobuf_javalite, io_grpc_grpc_proto
+load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
+
+grpc_java_repositories()
+
+# Protobuf now requires C++14 or higher, which requires Bazel configuration
+# outside the WORKSPACE. See .bazelrc in this directory.
+load("@com_google_protobuf//:protobuf_deps.bzl", "PROTOBUF_MAVEN_ARTIFACTS")
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+maven_install(
+    artifacts = [
+        "com.google.api.grpc:grpc-google-cloud-pubsub-v1:0.1.24",
+        "com.google.api.grpc:proto-google-cloud-pubsub-v1:0.1.24",
+    ] + IO_GRPC_GRPC_JAVA_ARTIFACTS + PROTOBUF_MAVEN_ARTIFACTS,
+    generate_compat_repositories = True,
+    override_targets = IO_GRPC_GRPC_JAVA_OVERRIDE_TARGETS,
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
+    ],
+)
+
+# Compat repositories build, maven to bazel name conversion
+load("@maven//:compat.bzl", "compat_repositories")
+compat_repositories()

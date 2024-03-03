@@ -1,0 +1,5 @@
+/simple-proto-example.iml
+/.java-version
+/bazel-bin/*
+/bazel-out/*
+/bazel-simple-proto-example/*

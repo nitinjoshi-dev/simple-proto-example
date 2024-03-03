@@ -1,0 +1,36 @@
+syntax = "proto3";
+option java_multiple_files = true; //setting it true will create different class for different models.
+//Else everything will be a subclass within a single class
+option java_package = "com.lomsmros.mediamanagement"; //package name of the java file created
+option go_package = "com.lomsmros/Core/Contracts/MediaManagement"; //package name of the go file created
+
+
+enum MediaType {
+  IMAGE = 0;
+  VIDEO = 1;
+  AUDIO = 2;
+  DOCUMENT = 3;
+  OTHER = 4;
+}
+
+enum MediaStorage {
+  LOCAL_MINIO = 0;
+  AWS_S3 = 1;
+}
+
+message Media {
+  string id = 1;
+  string name = 2;
+  string path = 3;
+  string storage = 4;
+  MediaType type = 5;
+  MediaStorage storageType = 6;
+}
+
+message GetMediaIdRequest {
+  string id = 1;
+}
+
+service MediaService {
+  rpc GetMediaById (GetMediaIdRequest) returns (Media) {}
+}
