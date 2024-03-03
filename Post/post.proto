@@ -1,10 +1,13 @@
 syntax = "proto3";
+
+package com.lomsmros.postmanagement;
+
+import "Media/media_service.proto";
+
 option java_multiple_files = true; //setting it true will create different class for different models.
                                   //Else everything will be a subclass within a single class
 option java_package = "com.lomsmros.postmanagement"; //package name of the java file created
 option go_package = "com.lomsmros/Core/Contracts/PostManagement"; //package name of the go file created
-
-
 
 
 message Post {
@@ -14,6 +17,14 @@ message Post {
   string author = 4;
   string created_at = 5;
   string updated_at = 6;
+  repeated com.lomsmros.mediamanagement.Media media = 7;
 }
 
+message GetPostByIdRequest {
+  string id = 1;
+}
+
+service PostService {
+  rpc GetPostById (GetPostByIdRequest) returns (Post) {}
+}
 

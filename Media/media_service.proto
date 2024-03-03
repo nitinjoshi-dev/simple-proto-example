@@ -1,4 +1,7 @@
 syntax = "proto3";
+
+package com.lomsmros.mediamanagement; //package name of the proto file
+
 option java_multiple_files = true; //setting it true will create different class for different models.
 //Else everything will be a subclass within a single class
 option java_package = "com.lomsmros.mediamanagement"; //package name of the java file created

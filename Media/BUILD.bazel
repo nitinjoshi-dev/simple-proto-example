@@ -14,7 +14,7 @@ java_proto_library(
 )
 
 java_grpc_library(
-    name = "mediia_service_java_grpc",
+    name = "media_service_java_grpc",
     srcs = [":media_service_proto"],
     deps = [":media_service_java_proto"],
 )
